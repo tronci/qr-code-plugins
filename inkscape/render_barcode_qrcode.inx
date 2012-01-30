@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+	<_name>Barcode - QR Code</_name>
+	<id>il.qrcode</id>
+	<dependency type="executable" location="extensions">render_barcode_qrcode.py</dependency>
+	<dependency type="executable" location="extensions">inkex.py</dependency>
+	<param name="content" type="string" _gui-text="Content:">Lorem Ipsum</param>
+	<param name="version" type="enum" _gui-text="Version:">
+		<item value="0">Auto</item>
+		<item value="1">1</item>
+		<item value="2">2</item>
+		<item value="3">3</item>
+		<item value="4">4</item>
+		<item value="5">5</item>
+		<item value="6">6</item>
+		<item value="7">7</item>
+		<item value="8">8</item>
+		<item value="9">9</item>
+		<item value="10">10</item>
+		<item value="11">11</item>
+		<item value="12">12</item>
+		<item value="13">13</item>
+		<item value="14">14</item>
+		<item value="15">15</item>
+		<item value="16">16</item>
+		<item value="17">17</item>
+		<item value="18">18</item>
+		<item value="19">19</item>
+		<item value="20">20</item>
+		<item value="21">21</item>
+		<item value="22">22</item>
+		<item value="23">23</item>
+		<item value="24">24</item>
+		<item value="25">25</item>
+		<item value="26">26</item>
+		<item value="27">27</item>
+		<item value="28">28</item>
+		<item value="29">29</item>
+		<item value="30">30</item>
+		<item value="31">31</item>
+		<item value="32">32</item>
+		<item value="33">33</item>
+		<item value="34">34</item>
+		<item value="35">35</item>
+		<item value="36">36</item>
+		<item value="37">37</item>
+		<item value="38">38</item>
+		<item value="39">39</item>
+		<item value="40">40</item>
+	</param>
+	<param name="em" type="enum" _gui-text="Encode Mode:">
+		<item value="byte">Byte (recommended)</item>
+		<item value="alphanumeric">Numbers + Letters</item>
+		<item value="numeric">Numbers only</item>
+	</param>
+	<param name="ec" type="enum" _gui-text="Error Correction:">
+		<item value="L">L (7%)</item>
+		<item value="M">M (15%)</item>
+		<item value="Q">Q (25%)</item>
+		<item value="H">H (30%)</item>
+	</param>
+	<param name="size" type="int" min="1" max="20" _gui-text="Module Size:">8</param>
+	<param name="padding" type="int" min="0" max="10" _gui-text="Padding:">4</param>
+	<effect>
+		<object-type>all</object-type>
+		<effects-menu>
+			<submenu _name="Render"/>
+		</effects-menu>
+	</effect>
+	<script>
+		<command reldir="extensions" interpreter="python">render_barcode_qrcode.py</command>
+	</script>
+</inkscape-extension>

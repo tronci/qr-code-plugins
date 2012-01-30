@@ -1,0 +1,394 @@
+<html>
+<head>
+<style type="text/css">
+head, body
+{
+	padding: 0;
+	margin: 10px;
+	font-family: Arial;
+	overflow: hidden;
+	background: #ece9d8;
+}
+
+h1
+{
+	margin: 0;
+	margin-bottom: 5px;
+	font-size: 18px;
+	font-family: Arial;
+}
+
+.left
+{
+	float: left;
+}
+
+.right
+{
+	float: left;
+	margin-left: 15px;
+}
+
+.item label
+{
+	display: block;
+	font-size: 12px;
+	margin-top: 5px;
+}
+
+.item input[type=text], .item select, .item textarea
+{
+	display: block;
+	width: 150px;
+}
+
+.item textarea
+{
+	width: 320px;
+	height: 195px;
+}
+
+.button
+{
+	width: 80px;
+	cursor: hand;
+	margin-top: 10px;
+	margin-left: 70px;
+}
+
+.info
+{
+	font-size: 12px;
+	line-height: 36px;
+}
+</style>
+<script type="text/javascript">
+function request_qrcode()
+{
+	var element = document.getElementById("hidden_points");
+	element.value = generate_qrcode();
+	window.location.href = 'skp:get_points@hidden_points';
+}
+
+function generate_qrcode()
+{
+	//Example: "http://www.esponce.com/api/v3/generate?content=hello&format=svg"
+	
+	//Collect parameters
+	var content = document.getElementById("content").value;
+	var size = document.getElementById("size").value;
+	var padding = document.getElementById("padding").value;
+	var version = document.getElementById("version").value;
+	var emindex = document.getElementById("em").value;
+	var ecindex = document.getElementById("ec").value;
+	
+	var em = "";
+	switch (emindex)
+	{
+		case 0: em = "byte"; break;
+		case 1: em = "alphanumeric"; break;
+		case 2: em = "numeric"; break;
+	}
+	
+	var ec = "";
+	switch (ecindex)
+	{
+		case 0: ec = "L"; break;
+		case 1: ec = "M"; break;
+		case 2: ec = "H"; break;
+		case 3: ec = "Q"; break;
+	}
+	
+	//Generate QR Code pattern
+	var api = new QRCodeAPI();
+	var qrcode = api.generate(content, "svg", size, padding, version, em, ec);
+		
+	//Parse SVG content
+	var parser = new SimpleXmlParser();
+	var params = parser.parse(qrcode);
+	var length = params.length;
+			
+	//Note: starts from 1 to ignore background rectangle
+	var points = [];
+	for (var i = 1; i < length; i++)
+	{
+		var p = params[i];
+		var x = p[0];
+		var y = p[1];
+		var w = p[2];
+		var h = p[3];
+		
+		var rectangle =
+		[
+			[x + 0, y + 0],
+			[x + 0, y + h],
+			[x + w, y + h],
+			[x + w, y + 0]
+		];
+		
+		//Add to array
+		points.push(rectangle);
+	}
+	
+	//Serialize points to string
+	var result = "";
+	length = points.length;
+	for (var i = 0; i < length; i++)
+	{
+		var rect = points[i];
+		for (var j = 0; j < 4; j++)
+		{
+			var x = rect[j][0];
+			var y = rect[j][1];
+			result += x + "," + y + ";"
+		}
+	}
+	
+	return result;
+}
+
+/**************************************************************************************//**
+ * Reference: http://stackoverflow.com/questions/247483/http-get-request-in-javascript
+ ******************************************************************************************/
+function httpGet(url)
+{
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("GET", url, false);
+	xmlHttp.send(null);
+	return xmlHttp.responseText;
+}
+
+/**************************************************************************************//**
+ * Generates a QR Code using web service.
+ ******************************************************************************************/
+function QRCodeAPI()
+{
+	this.generate = function(content, format, size, padding, version, em, ec)
+	{
+		var ver = "";
+		if (typeof version != "undefined" && version > 0)
+		{
+			ver = "&version=" + version;
+		}
+	
+		//Build URL to generate QR Code matrix
+		var url = "http://www.esponce.com/api/v3/generate";
+		url += "?content=" + escape(content);
+		url += "&format=" + format;
+		url += "&size=" + size;
+		url += "&padding=" + padding;
+		url += ver;
+		url += "&em=" + em;
+		url += "&ec=" + ec;
+		url += "&source=sketchup";
+		//alert(url);
+		
+		//Make a request
+		var result = httpGet(url);
+		return result;
+	}
+}
+
+/**************************************************************************************//**
+ * Very basic implementation of XML parser. Works only for specific QR Code SVG images.
+ ******************************************************************************************/
+function SimpleXmlParser()
+{
+	this.width = 0;
+	this.height = 0;
+
+	this.parse = function(xml)
+	{
+		//Goal is to fill 'result' with array of [x,y,width,height]
+		var result = [];
+		
+		//Read line by line
+		var lines = xml.split("\n");
+		var length = lines.length;
+		for (var i = 0; i < length; i++)
+		{
+			var line = lines[i];
+			
+			//Must be a 'rect' tag
+			if (line.indexOf("<rect") == 0)
+			{
+				//Collect numbers from the string
+				//line = "<rect x="32" y="32" width="8" height="8"..."
+				var x = line;
+				x = x.replace("<rect x=\"", "");
+				x = x.replace("\" y=\"", ",");
+				x = x.replace("\" y=\"", ",");
+				x = x.replace("\" width=\"", ",");
+				x = x.replace("\" height=\"", ",");
+				x = x.substring(0, x.indexOf("\"", ""));
+				
+				//Parameters as strings
+				var list = x.split(",");
+				
+				//Parameters as int
+				//params = [32,32,8,8]
+				var params =
+				[
+					parseInt(list[0]),
+					parseInt(list[1]),
+					parseInt(list[2]),
+					parseInt(list[3]),
+				];
+				
+				//First rectangle is for background fill - size is the same as overall image size
+				if (this.width == 0 || this.height == 0)
+				{
+					this.width = params[2];
+					this.height = params[3];
+				}
+				
+				//Add to result array
+				result.push(params);
+			}
+		}
+		
+		return result;
+	}
+}
+
+/**************************************************************************************//**
+ * Frequently used methods.
+ ******************************************************************************************/
+function Helper()
+{
+	/**************************************************************************************//**
+	 * Gets application name and version, e.g. "SketchUp 8"
+	 ******************************************************************************************/
+	this.getApplicationInfo = function()
+	{
+		return app.name + " " + app.version;
+	}
+	
+	/**************************************************************************************//**
+	 * Gets platform name and version, e.g. "Windows 7"
+	 ******************************************************************************************/
+	this.getPlatformInfo = function()
+	{
+		return $.os;
+	}
+	
+	/**************************************************************************************//**
+	 * Gets platform type, e.g. "win" or "mac"
+	 ******************************************************************************************/
+	this.getPlatformType = function()
+	{
+		var name = navigator.userAgent;
+		if (name.search(/windows/i) >= 0)
+		{
+			return "win";
+		}
+		if (name.search(/macintosh/i) >= 0)
+		{
+			return "mac";
+		}
+		return "";
+	}
+}
+</script>
+</head>
+<body>
+
+<h1>QR Code Generator</h1>
+
+<input type="hidden" id="hidden_points" name="hidden_points" value="" />
+
+<div class="left">
+	<div class="item">
+		<label for="content">Content</label>
+		<textarea id="content" name="content">Lorem Ipsum</textarea>
+	</div>
+	
+	<div class="item">
+		<span class="info">To learn more about QR Codes click <a href="http://www.esponce.com/about-qr-codes" target="_blank">here</a>.</span>
+	</div>
+</div>
+
+<div class="right">
+	<div class="item">
+		<label for="size">Module Size</label>
+		<input id="size" name="size" value="8" />
+	</div>
+
+	<div class="item">
+		<label for="padding">Padding</label>
+		<input id="padding" name="padding" value="4" />
+	</div>
+
+	<div class="item">
+		<label for="version">Version</label>
+		<select id="version" name="version">
+			<option value="0" selected="selected">Auto</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+			<option value="21">21</option>
+			<option value="22">22</option>
+			<option value="23">23</option>
+			<option value="24">24</option>
+			<option value="25">25</option>
+			<option value="26">26</option>
+			<option value="27">27</option>
+			<option value="28">28</option>
+			<option value="29">29</option>
+			<option value="30">30</option>
+			<option value="31">31</option>
+			<option value="32">32</option>
+			<option value="33">33</option>
+			<option value="34">34</option>
+			<option value="35">35</option>
+			<option value="36">36</option>
+			<option value="37">37</option>
+			<option value="38">38</option>
+			<option value="39">39</option>
+			<option value="40">40</option>
+		</select>
+	</div>
+
+	<div class="item">
+		<label for="em">Encode Mode</label>
+		<select id="em" name="em">
+			<option value="0" selected="selected">Byte</option>
+			<option value="1">Alphanumeric</option>
+			<option value="2">Numeric</option>
+		</select>
+	</div>
+
+	<div class="item">
+		<label for="ec">Error Correction</label>
+		<select id="ec" name="ec">
+			<option value="0">L</option>
+			<option value="1" selected="selected">M</option>
+			<option value="2">H</option>
+			<option value="3">Q</option>
+		</select>
+	</div>
+	
+	<div class="item">
+		<input type="button" onclick="request_qrcode()" value="Generate" class="button" />
+	</div>
+</div>
+
+</body>
+</html>

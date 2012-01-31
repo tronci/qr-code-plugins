@@ -1,0 +1,29 @@
+#summary QR Code plug-in for WordPres
+
+= Introduction =
+
+This WordPress plug-in uses Esponce API to generate a QR Code with custom content. Size, padding and color can be set through the parameters.
+
+= Installation =
+1. Upload *esponce-qrcode* folder to the */wp-content/plugins/* directory
+
+2. Activate the plugin through the *Plugins* menu in WordPress
+<wiki:comment>http://www.esponce.com/Uploaded/Blog/wordpress-enable.png</wiki:comment>
+
+3. Click on the QR Code icon in editor or place the syntax in your blog post
+{{{
+[qrcode content="your content goes here" size="8" padding="4"]
+}}}
+
+= Parameters =
+  * *content* - content to be encoded into QR Code, could be any text, hyperlink, vcard, etc.
+  * *size* - size of a QR Code module (size of a "pixel")
+  * *padding* - padding size in module units, aka quiet zone
+  * *version* - optional, QR Code version, value from 1-40 or leave empty to automatically determine the optimized value
+  * *em* - encode mode: byte (default), alphanumeric, numeric
+  * *ec* - error correction: L, M (default), H, Q
+  * *foreground* - foreground color, RGB hex #RRGGBB or with alpha transparency #AARRGGBB
+  * *background* - background color, RGB hex #RRGGBB or with alpha transparency #AARRGGBB
+
+= Screenshot =
+http://www.esponce.com/Uploaded/Blog/wordpress-syntax.png

@@ -19,7 +19,7 @@ Enter some content and click *Create* to render QR Code on the workspace.
 = Notes =
   * Uses web service to generate a QR Code so the plug-in requires internet connection.
   * Make QR Code blocks black or very dark and keep the background white or light so the code is readable.
-  * Be patient as the script render slowly.
+  * Be patient as the script renders slowly.
 
 = Screenshot =
 http://www.esponce.com/Uploaded/Blog/photoshop.png

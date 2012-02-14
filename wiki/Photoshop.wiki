@@ -12,7 +12,7 @@ Optionally copy the .jsx file to your Photoshop scripts directory.
 Example: copy files to "C:\Program Files (x86)\Adobe\Adobe Photoshop CS4\Presets\Scripts\"
 
 = Usage =
-Open the Photoshop and in menu select *File > Scripts > Browse...* and find .jsx file.
+Open Photoshop and in menu select *File > Scripts > Browse...* and find .jsx file.
 
 Enter some content and click *Create* to render QR Code on the workspace.
 

@@ -16,7 +16,7 @@ Plug-in for Blender 2.57 can generate QR Code blocks in 3D or just flat 2D shape
   * Optionally, go into *Edit Mode*, press P key and select *By loose parts* if you want to separate blocks into new objects
 
 = Notes =
-  * What is QR Code? See http://www.esponce.com/about-qr-codes
+  * What is a QR Code? See http://www.esponce.com/about-qr-codes
   * Requires internet connection to generate a QR Code pattern.
   * Set properties then check the 'Construct' checkbox. Cannot preview changes in real time due to internet connection (Blender may slow down or the server may block IP on mass request).
   * Tested on Windows 7, Blender 2.57.1, Python 3.2 (bundled), all 64-bit

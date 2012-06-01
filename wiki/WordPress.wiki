@@ -1,7 +1,7 @@
 #summary QR Code plug-in for WordPress
 
 = Note =
-The WordPress plugin will no longer be updated in Google Code repository. Latest version is available on the [http://wordpress.org/extend/plugins/esponce-qr-code-generator/ official WordPress plugin] site.
+The WordPress plugin will no longer be updated in Google Code repository. *Latest version* is available on the [http://wordpress.org/extend/plugins/esponce-qr-code-generator/ official WordPress plugin] site.
 
 = Introduction =
 
@@ -29,4 +29,8 @@ This WordPress plug-in uses Esponce API to generate a QR Code with custom conten
   * *background* - background color, RGB hex #RRGGBB or with alpha transparency #AARRGGBB
 
 = Screenshot =
+Version 1.0 on WordPress 3.0
 http://www.esponce.com/Uploaded/Blog/wordpress-syntax.png
+
+Version 1.2 on WordPress 3.3.2, available on the [http://wordpress.org/extend/plugins/esponce-qr-code-generator/ WordPress plugin] site
+http://www.esponce.com/Uploaded/Blog/wordpress-dialog.png

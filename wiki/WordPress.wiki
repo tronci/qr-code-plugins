@@ -1,4 +1,7 @@
-#summary QR Code plug-in for WordPres
+#summary QR Code plug-in for WordPress
+
+= Note =
+The WordPress plugin will no longer be updated in Google Code repository. Latest version is available on the [http://wordpress.org/extend/plugins/esponce-qr-code-generator/ official WordPress plugin] site.
 
 = Introduction =
 

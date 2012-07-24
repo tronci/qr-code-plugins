@@ -39,7 +39,7 @@ bl_info = {
     "location": "View3D > Add > Mesh",
     "description": "Adds a QR Code mesh to the Add Mesh menu. Requires internet connection to generate a QR Code pattern.",
     "warning": "",
-    "wiki_url": "http://code.google.com/p/qr-code-plugins",
+    "wiki_url": "http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Add_Mesh/QR_Code_Generator",
     "tracker_url": "http://code.google.com/p/qr-code-plugins",
     "category": "Add Mesh"}
     

@@ -22,6 +22,7 @@ Plug-in for Blender 2.57+ can generate QR Code blocks in 3D or just flat 2D shap
   * Tested on Windows 7, Blender 2.57.1 and 2.63a, Python 3.2 (bundled), all 64-bit
   * I haven't found a solution to separate mesh into cubes in Python. This can be done in GUI by going into Edit Mode, press P key and select 'By loose parts'.
   * Also had some problems finding button element, so 'Construct' checkbox is used instead.
+  * [http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Add_Mesh/QR_Code_Generator Blender wiki]
 
 = Screenshots =
 http://www.esponce.com/Uploaded/Blog/blender-enable.png

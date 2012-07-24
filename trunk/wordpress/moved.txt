@@ -1,0 +1,1 @@
+This plugin has moved to http://wordpress.org/extend/plugins/esponce-qr-code-generator/

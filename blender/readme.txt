@@ -1,6 +1,8 @@
 == Install ==
 * Copy this file in the directory with other scripts. In Windows:
     %appdata%\Blender Foundation\Blender\2.57\scripts\addons
+    or
+    <blender-directory>\2.63\scripts\addons
 * Open Blender > File > User Preferences (CTRL+ALT+U) > Add-Ons (tab) > Add Mesh (left)
 * Check the add-on named "Add Mesh: QR Code". If the add-on does not get activated check System Console.
 
@@ -18,7 +20,7 @@
 * Requires internet connection to generate a QR Code pattern.
 * Set properties then check the 'Construct' checkbox. Cannot preview changes in real time
   due to internet connection (Blender may slow down or server may block IP on mass request).
-* Tested on Windows 7, Blender 2.57.1, Python 3.2 (bundled), all 64-bit
+* Tested on Windows 7, Blender 2.57.1 and 2.63a, Python 3.2 (bundled), all 64-bit
 * I haven't found a solution to separate mesh into cubes in Python. This can be done
   in GUI by going into Edit Mode, press P key and select 'By loose parts'.
 * Also had some problems finding button element, so 'Construct' checkbox is used instead.

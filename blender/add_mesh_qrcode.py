@@ -2,13 +2,13 @@
 # -*- coding: UTF-8 -*-
 
 # QR Code Generator plug-in for Blender 2.5.7+
-# plug-in version: 1.0
+# plug-in version: 1.1
 # provided by Esponce team
 # http://www.esponce.com/
 
 # ***** BEGIN MIT LICENSE BLOCK *****
 #
-# Copyright (C) 2012 Avivo d.o.o.
+# Copyright (C) 2012 Esponce d.o.o.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -33,7 +33,7 @@
 bl_info = {
     "name": "QR Code",
     "author": "Esponce.com",
-    "version": (1,0),
+    "version": (1, 1),
     "blender": (2, 5, 7),
     "api": 35853,
     "location": "View3D > Add > Mesh",
@@ -50,15 +50,21 @@ bl_info = {
 # * Requires internet connection to generate a QR Code pattern.
 # * Set properties then check the 'Construct' checkbox. Cannot preview changes in real time
 #   due to internet connection (Blender may slow down or server may block IP on mass request).
-# * Tested on Windows 7, Blender 2.57.1, Python 3.2 (bundled), all 64-bit
+# * Tested on Windows 7, Blender 2.57.1 and 2.63a, Python 3.2 (bundled), all 64-bit
 # * I haven't found a solution to separate mesh into cubes in Python. This can be done
 #   in GUI by going into Edit Mode, press P key and select 'By loose parts'.
 # * Also had some problems finding button element, so 'Construct' checkbox is used instead.
 # * QR Code is registered trademark of DENSO WAVE INCORPORATED
 #
+# Change log:
+# * 1.0 - initial version
+# * 1.1 - fix for Blender versions > 2.57
+#
 # Install:
 # * Copy this file in the directory with other scripts. In Windows:
 #     %appdata%\Blender Foundation\Blender\2.57\scripts\addons
+#     or
+#     <blender-directory>\2.63\scripts\addons
 # * Open Blender > File > User Preferences (CTRL+ALT+U) > Add-Ons (tab) > Add Mesh (left)
 # * Check the add-on named "Add Mesh: QR Code". If the add-on does not get activated check System Console.
 #
@@ -95,14 +101,16 @@ def create_mesh_object(context, verts, edges, faces, name):
 
     # Update mesh geometry after adding stuff.
     mesh.update()
-
-    # Blender 2.58
-    #from bpy_extras.object_utils import object_data_add
-    #return object_data_add(context, mesh, operator=None)
-
-    # Blender 2.57
-    import add_object_utils
-    return add_object_utils.object_data_add(context, mesh, operator=None)
+    
+    v = bpy.app.version
+    if v[0] == 2 and v[1] > 57:
+        # Blender 2.58 and 2.63a
+        from bpy_extras.object_utils import object_data_add
+        return object_data_add(context, mesh, operator=None)
+    else:
+        # Blender 2.57
+        import add_object_utils
+        return add_object_utils.object_data_add(context, mesh, operator=None)
 
 #******************************************************************************************
 # Calls the Esponce QR Code web service to generate a SVG image.

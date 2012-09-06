@@ -61,6 +61,7 @@
 	</param>
 	<param name="size" type="int" min="1" max="20" _gui-text="Module Size:">8</param>
 	<param name="padding" type="int" min="0" max="10" _gui-text="Padding:">4</param>
+	<param name="newline" type="boolean" _gui-text="&quot;\n&quot; for new line">1</param>
 	<effect>
 		<object-type>all</object-type>
 		<effects-menu>

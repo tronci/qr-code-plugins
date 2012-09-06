@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 # QR Code Generator plug-in for Inkscape 0.48
-# plug-in version: 1.0
+# plug-in version: 1.1
 # provided by Esponce team
 # http://www.esponce.com/
 
@@ -100,7 +100,11 @@ def qrcode_generate(content, size, padding, version, em, ec):
 #******************************************************************************************
 # Generates and renders a QR Code image to the workspace.
 #******************************************************************************************
-def qrcode_render(content, size, padding, version, em, ec, parent):
+def qrcode_render(content, size, padding, version, em, ec, newline, parent):
+    
+    if newline:
+        content = content.replace("\\n", "\n")
+        content = content.replace("\\r", "\r")
     
     # Generate QR Code - call web service
     qrcode = qrcode_generate(content, size, padding, version, em, ec)
@@ -136,6 +140,7 @@ class QRCode(inkex.Effect):
         self.OptionParser.add_option("--version", action="store", type="string", dest="VERSION", default='')
         self.OptionParser.add_option("--em", action="store", type="string", dest="EM", default='byte')
         self.OptionParser.add_option("--ec", action="store", type="string", dest="EC", default='M')
+        self.OptionParser.add_option("--newline", action="store", type="inkbool",  dest="NEWLINE", default='true')
             
     def effect(self):
         
@@ -151,7 +156,7 @@ class QRCode(inkex.Effect):
             group = inkex.etree.SubElement(self.current_layer, 'g', attribs)
             
             # Render QR Code to the workspace
-            qrcode_render(so.CONTENT, so.SIZE, so.PADDING, so.VERSION, so.EM, so.EC, group)
+            qrcode_render(so.CONTENT, so.SIZE, so.PADDING, so.VERSION, so.EM, so.EC, so.NEWLINE, group)
             
             
 if __name__ == '__main__':

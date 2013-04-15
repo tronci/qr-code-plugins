@@ -2,13 +2,13 @@
 # -*- coding: UTF-8 -*-
 
 # QR Code Generator plug-in for Blender 2.5.7+
-# plug-in version: 1.1
+# plug-in version: 1.1b
 # provided by Esponce team
 # http://www.esponce.com/
 
 # ***** BEGIN MIT LICENSE BLOCK *****
 #
-# Copyright (C) 2012 Esponce d.o.o.
+# Copyright (C) 2013 Esponce d.o.o.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -40,7 +40,7 @@ bl_info = {
     "description": "Adds a QR Code mesh to the Add Mesh menu. Requires internet connection to generate a QR Code pattern.",
     "warning": "",
     "wiki_url": "http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Add_Mesh/QR_Code_Generator",
-    "tracker_url": "http://code.google.com/p/qr-code-plugins",
+    "tracker_url": "http://code.google.com/p/qr-code-plugins/issues/list",
     "category": "Add Mesh"}
     
 #******************************************************************************************
@@ -59,6 +59,7 @@ bl_info = {
 # Change log:
 # * 1.0 - initial version
 # * 1.1 - fix for Blender versions > 2.57
+# * 1.1b - minor bug fix
 #
 # Install:
 # * Copy this file in the directory with other scripts. In Windows:
@@ -99,12 +100,15 @@ def create_mesh_object(context, verts, edges, faces, name):
     # Make a mesh from a list of verts/edges/faces.
     mesh.from_pydata(verts, edges, faces)
 
+    # Remove doubles
+    #bpy.ops.mesh.remove_doubles(threshold=0.0001, use_unselected=True)
+
     # Update mesh geometry after adding stuff.
     mesh.update()
     
     v = bpy.app.version
-    if v[0] == 2 and v[1] > 57:
-        # Blender 2.58 and 2.63a
+    if (v[0] == 2 and v[1] > 57) or (v[0] > 2):
+        # Blender 2.58 and 2.63a or future versions...
         from bpy_extras.object_utils import object_data_add
         return object_data_add(context, mesh, operator=None)
     else:
@@ -363,6 +367,7 @@ class AddQRCode(bpy.types.Operator):
     quads = bpy.props.BoolProperty(name="Quads", description="A value indicating whether to created quads of triangles.", default=True)
     extrude = bpy.props.BoolProperty(name="Extrude", description="Enable to extrude blocks to 3D otherwise keep it flat 2D.", default=True)
     #join = bpy.props.BoolProperty(name="Join Modules", description="Join all blocks into one mesh.", default=True)
+    #remove_doubles = bpy.props.BoolProperty(name="Remove doubles", description="Automatically remove overlapping vertices.", default=True)
     join = True
 
     #******************************************************************************************
@@ -397,7 +402,7 @@ class AddQRCode(bpy.types.Operator):
     def execute(self, context):
         
         # Check if preview is enabled or not
-        if not self.properties.construct: return ('FINISHED')
+        if not self.properties.construct: return {'FINISHED'}
         
         # Create a QR Code mesh
         verts, faces = add_qrcode(self.content, self.module_size, self.padding, self.version, self.em, self.ec, self.quads, self.extrude, self.join)
